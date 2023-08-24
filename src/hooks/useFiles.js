@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import { useAuth } from 'hooks';
-import { getMyFilesApi } from 'api/files';
+import { getMyFilesApi, deleteFileApi } from 'api/files';
 
 export function useFiles() {
 	const { auth } = useAuth();
@@ -22,9 +22,21 @@ export function useFiles() {
 		}
 	};
 
+	const deleteFile = async (fileId) => {
+		try {
+			setLoading(true);
+			await deleteFileApi(auth.token, fileId);
+			setLoading(false);
+		} catch (error) {
+			setLoading(false);
+			throw error;
+		}
+	};
 	return {
 		loading,
 		myFiles,
+
 		getMyFiles,
+		deleteFile,
 	};
 }
