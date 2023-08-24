@@ -30,7 +30,7 @@ export async function getMyFilesApi(token) {
 
 export async function deleteFileApi(token, fileId) {
 	try {
-		const url = `${BASE_API}/api/v1/my-files/${fileId}/`;
+		const url = `${BASE_API}/api/v1/files/${fileId}/`;
 		const params = {
 			method: 'DELETE',
 			headers: {
