@@ -1,5 +1,5 @@
 import { AuthLayout } from 'layouts';
-import { LoginPage, Homepage } from 'pages';
+import { LoginPage, Homepage, MyFilesPage } from 'pages';
 
 const routesUser = [
 	{
@@ -11,6 +11,11 @@ const routesUser = [
 		path: '/login',
 		layout: AuthLayout,
 		component: LoginPage,
+	},
+	{
+		path: '/my-files',
+		layout: AuthLayout,
+		component: MyFilesPage,
 	},
 ];
 

@@ -16,20 +16,20 @@ const sidebarOptions = [
 		key: 'dashboard',
 		text: 'Dashboard',
 		icon: <BiSolidDashboard />,
-		path: '',
+		path: '/',
 	},
 	{
-		key: 'menuitem1',
-		text: 'Menu item 1',
+		key: 'my-files',
+		text: 'My files',
 		icon: <BiBadge />,
-		path: '/path-1',
+		path: '/my-files',
 	},
-	{
-		key: 'menuitem2',
-		text: 'Menu item 2',
-		icon: <BiBadge />,
-		path: '/path-2',
-	},
+	// {
+	// 	key: 'menuitem2',
+	// 	text: 'Menu item 2',
+	// 	icon: <BiBadge />,
+	// 	path: '/path-2',
+	// },
 ];
 
 export function AuthLayout(props) {
