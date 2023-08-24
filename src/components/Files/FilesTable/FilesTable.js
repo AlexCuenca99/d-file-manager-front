@@ -6,10 +6,9 @@ import {
 	MdRemoveRedEye,
 	MdDownloadForOffline,
 } from 'react-icons/md';
-import { useNavigate } from 'react-router-dom';
 
 export function FilesTable(props) {
-	const { files, handleShowFile } = props;
+	const { files, handleShowFile, handleDeleteFile } = props;
 
 	return (
 		<Table celled striped>
@@ -27,7 +26,11 @@ export function FilesTable(props) {
 						<Table.Cell>
 							{upperCase(file.file_extension)}
 						</Table.Cell>
-						<Actions file={file} handleShowFile={handleShowFile} />
+						<Actions
+							file={file}
+							handleShowFile={handleShowFile}
+							handleDeleteFile={handleDeleteFile}
+						/>
 					</Table.Row>
 				))}
 			</Table.Body>
@@ -36,8 +39,7 @@ export function FilesTable(props) {
 }
 
 function Actions(props) {
-	const { file, handleShowFile } = props;
-	const navigate = useNavigate();
+	const { file, handleShowFile, handleDeleteFile } = props;
 
 	return (
 		<Table.Cell collapsing>
@@ -46,10 +48,13 @@ function Actions(props) {
 					icon={<MdRemoveRedEye size={17} />}
 					onClick={() => handleShowFile(file)}
 				/>
-				<Button icon={<MdDeleteForever size={17} />} />
+				<Button
+					icon={<MdDeleteForever size={17} />}
+					onClick={() => handleDeleteFile(file)}
+				/>
 				<Button
 					icon={<MdDownloadForOffline size={17} />}
-					onClick={() => navigate(`${file.file}`)}
+					onClick={() => ''}
 				/>
 			</Button.Group>
 		</Table.Cell>

@@ -1,7 +1,18 @@
 import React, { useEffect, useState } from 'react';
 
 import { useFiles } from 'hooks';
-import { Button, Grid, Header, Image, List, Modal } from 'semantic-ui-react';
+import {
+	Button,
+	Confirm,
+	Grid,
+	Header,
+	Icon,
+	Image,
+	Input,
+	List,
+	Modal,
+	Segment,
+} from 'semantic-ui-react';
 
 import { FilesTable } from 'components';
 import {
@@ -10,44 +21,80 @@ import {
 	videosExtension,
 } from 'utils/feeders';
 import { includes } from 'lodash';
+import { toast } from 'react-toastify';
 
 export function MyFilesPage() {
-	const { getMyFiles, loading, myFiles } = useFiles();
+	const { getMyFiles, deleteFile, loading, myFiles } = useFiles();
 
 	const [open, setOpen] = useState(false);
 	const [file, setFile] = useState(null);
+	const [openConfirm, setOpenConfirm] = useState(false);
+	const [confirmHeader, setConfirmHeader] = useState('');
+	const [confirmContent, setConfirmContent] = useState('');
+	const [refetch, setRefetch] = useState(false);
 
 	useEffect(() => {
 		getMyFiles();
-	}, []);
+	}, [refetch]);
 
+	const handleRefetch = () => {
+		setRefetch((prev) => !prev);
+	};
 	const handleShowFile = (file) => {
 		setOpen(true);
 		setFile(file);
 	};
 
+	const handleDeleteFile = (file) => {
+		setConfirmHeader('Delete file');
+		setConfirmContent(
+			`Are you sure you want to delete ${file.file_name} file? `
+		);
+		setOpenConfirm(true);
+		setFile(file);
+	};
+
+	const handleConfirmOperation = async () => {
+		try {
+			await deleteFile(file.id);
+			setOpenConfirm(false);
+			handleRefetch();
+			toast.success('File deleted successfully');
+		} catch (error) {
+			setOpenConfirm(false);
+			toast.error(error.cause ? error.cause.detail : error.message);
+		}
+	};
 	return (
 		<>
-			<Grid>
-				<Grid.Column width="4">
-					<List>
-						<List.Item>
-							<List.Icon name="folder" />
-							<List.Content>
-								<List.Header>src</List.Header>
-								<List.Description>
-									Source files for project
-								</List.Description>
-							</List.Content>
-						</List.Item>
-					</List>
-				</Grid.Column>
-				<Grid.Column stretched width={12}>
-					<FilesTable
-						files={myFiles}
-						handleShowFile={handleShowFile}
-					/>
-				</Grid.Column>
+			<Grid columns={2}>
+				<Grid.Row>
+					<Grid.Column width="4">
+						<List>
+							<List.Item>
+								<List.Icon name="folder" />
+								<List.Content>
+									<List.Header>src</List.Header>
+									<List.Description>
+										Source files for project
+									</List.Description>
+								</List.Content>
+							</List.Item>
+						</List>
+					</Grid.Column>
+					<Grid.Column stretched width={12}>
+						<Segment>
+							<Header>Upload your files</Header>
+							<Input type="file" />
+						</Segment>
+
+						<FilesTable
+							files={myFiles}
+							handleShowFile={handleShowFile}
+							handleDeleteFile={handleDeleteFile}
+						/>
+					</Grid.Column>
+				</Grid.Row>
 			</Grid>
 			<Modal
 				onClose={() => setOpen(false)}
@@ -59,7 +106,7 @@ export function MyFilesPage() {
 				<Modal.Content image>
 					<Modal.Description>
 						{includes(imagesExtension, file?.file_extension) ? (
-							<Image src={file?.file} />
+							<Image src={file?.file} size="medium" />
 						) : includes(videosExtension, file?.file_extension) ? (
 							<video
 								src={file.file}
@@ -92,6 +139,15 @@ export function MyFilesPage() {
 					/>
 				</Modal.Actions>
 			</Modal>
+			<Confirm
+				open={openConfirm}
+				onCancel={() => setOpenConfirm(false)}
+				onConfirm={handleConfirmOperation}
+				header={confirmHeader}
+				content={confirmContent}
+				cancelButton={<Button content="Cancel" disabled={loading} />}
+				confirmButton={<Button content="OK" loading={loading} />}
+			/>
 		</>
 	);
 }

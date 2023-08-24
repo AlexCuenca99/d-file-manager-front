@@ -46,9 +46,7 @@ export async function deleteFileApi(token, fileId) {
 			const errorValues = omit(merge(result, result.errors), ['errors']);
 			throw new Error('Error in request', { cause: errorValues });
 		}
-		const result = await response.json();
-
-		return result;
+		return true;
 	} catch (error) {
 		throw error;
 	}
